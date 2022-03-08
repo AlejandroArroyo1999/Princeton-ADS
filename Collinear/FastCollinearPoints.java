@@ -22,6 +22,10 @@ public class FastCollinearPoints {
         Point[] copyPoints = Arrays.copyOf(points, points.length);
         ArrayList<LineSegment> segmentList = new ArrayList<LineSegment>();
         for (Point point : sortedPoints) {
+            double a;
+            for (Point pointCompare : copyPoints) {
+                a = pointCompare.slopeTo(point);
+            }
             Arrays.sort(copyPoints, point.slopeOrder());
             int count = 1;
             double tmp = point.slopeTo(copyPoints[0]);
@@ -30,7 +34,7 @@ public class FastCollinearPoints {
                     count++;
                 }
                 else {
-                    if (count >= 4) {
+                    if (count >= 3) {
                         LineSegment tmpLine;
                         if (point.compareTo(copyPoints[i - 1]) > 0) {
                             tmpLine = new LineSegment(copyPoints[i - 1], point);

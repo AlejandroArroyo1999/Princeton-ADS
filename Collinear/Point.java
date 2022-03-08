@@ -88,9 +88,16 @@ public class Point implements Comparable<Point> {
      */
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
-        return (o1, o2) -> Double.compare(slopeTo(o1), slopeTo(o2));
+        return new SlopeOrder();
     }
 
+    private class SlopeOrder implements Comparator<Point> {
+        public int compare(Point a, Point b) {
+            double aSlope = slopeTo(a);
+            double bSlope = slopeTo(b);
+            return Double.compare(aSlope, bSlope);
+        }
+    }
 
     /**
      * Returns a string representation of this point.
