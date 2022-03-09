@@ -43,7 +43,7 @@ public class BruteCollinearPoints {
         segments = segmentList.toArray(new LineSegment[segmentList.size()]);
     }
 
-    public boolean checkNull(Point[] array) {
+    private boolean checkNull(Point[] array) {
         int n = array.length;
         for (int i = 0; i < n; i++) {
             if (array[i] == null) return true;
@@ -51,7 +51,7 @@ public class BruteCollinearPoints {
         return false;
     }
 
-    public boolean checkDuplicates(Point[] array) {
+    private boolean checkDuplicates(Point[] array) {
         int n = array.length;
         Point temp = array[0];
         for (int i = 1; i < n; i++) {
