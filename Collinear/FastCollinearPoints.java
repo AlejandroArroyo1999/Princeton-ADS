@@ -8,48 +8,42 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FastCollinearPoints {
     private LineSegment[] segments;
 
     public FastCollinearPoints(Point[] points) {
         if (points == null) throw new java.lang.IllegalArgumentException();
-        Point[] sortedPoints = Arrays.copyOf(points, points.length);
+        Point[] sortedPoints = points.clone();
         Arrays.sort(sortedPoints);
         checkException(sortedPoints);
-        Point[] copyPoints = Arrays.copyOf(points, points.length);
-        ArrayList<LineSegment> segmentList = new ArrayList<LineSegment>();
+
+        int N = points.length;
+        List<LineSegment> segmentList = new LinkedList<>();
+
         for (Point point : sortedPoints) {
-            double a;
-            for (Point pointCompare : copyPoints) {
-                a = pointCompare.slopeTo(point);
-            }
-            Arrays.sort(copyPoints, point.slopeOrder());
-            int count = 1;
-            double tmp = point.slopeTo(copyPoints[0]);
-            for (int i = 1; i < copyPoints.length; i++) {
-                if (point.slopeTo(copyPoints[i]) == tmp) {
-                    count++;
-                }
-                else {
-                    if (count >= 3) {
-                        LineSegment tmpLine;
-                        if (point.compareTo(copyPoints[i - 1]) > 0) {
-                            tmpLine = new LineSegment(copyPoints[i - 1], point);
-                        }
-                        else {
-                            tmpLine = new LineSegment(point, copyPoints[i - 1]);
-                        }
-                        if (!segmentList.contains(tmpLine)) segmentList.add(tmpLine);
-                    }
-                    tmp = point.slopeTo(copyPoints[i]);
-                    count = 1;
+            Point[] pointsBySlope = sortedPoints.clone();
+            Arrays.sort(pointsBySlope, point.slopeOrder());
+
+            int x = 1;
+            while (x < N) {
+
+                LinkedList<Point> candidates = new LinkedList<>();
+                double tmpSlope = point.slopeTo(pointsBySlope[x]);
+                do {
+                    candidates.add(pointsBySlope[x++]);
+                } while (x < N && point.slopeTo(pointsBySlope[x]) == tmpSlope);
+
+                if (candidates.size() >= 3 && point.compareTo(candidates.peek()) < 0) {
+                    Point max = candidates.removeLast();
+                    segmentList.add(new LineSegment(point, max));
                 }
             }
         }
-        segments = segmentList.toArray(new LineSegment[segmentList.size()]);
+        segments = segmentList.toArray(new LineSegment[0]);
     }
 
     public LineSegment[] segments() {

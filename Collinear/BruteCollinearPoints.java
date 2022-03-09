@@ -8,7 +8,6 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -74,39 +73,31 @@ public class BruteCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        String filename = args[0];
-
-        In in = new In(filename);
+        In in = new In(args[0]);
         int n = in.readInt();
         Point[] points = new Point[n];
-
-        // rescale coordinates and turn on animation mode
-        StdDraw.setXscale(-32768, 32768);
-        StdDraw.setYscale(-32768, 32768);
-        StdDraw.show();
-        StdDraw.setPenRadius(0.01);  // make the points a bit larger
-
-        StdDraw.setPenColor(Color.RED);
-        LineSegment xAxis = new LineSegment(new Point(-32767, 0), new Point(32767, 0));
-        xAxis.draw();
-        LineSegment yAxis = new LineSegment(new Point(0, -32767), new Point(0, 32767));
-        yAxis.draw();
-
-        StdDraw.setPenRadius(0.005);
-        StdDraw.setPenColor(Color.BLACK);
-        // read points from file
         for (int i = 0; i < n; i++) {
-            int x, y;
-            x = in.readInt();
-            y = in.readInt();
-
-            Point p = new Point(x, y);
-            p.draw();
-            points[i] = p;
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
         }
 
+        // draw the points
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(-200, 32768);
+        StdDraw.setYscale(-200, 32768);
+        StdDraw.setPenRadius(0.005);
+        StdDraw.setPenColor(StdDraw.RED);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show();
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(0.0005);
+
+
         // print and draw the line segments
-        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+        FastCollinearPoints collinear = new FastCollinearPoints(points);
         for (LineSegment segment : collinear.segments()) {
             StdOut.println(segment);
             segment.draw();
