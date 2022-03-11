@@ -42,6 +42,9 @@ public class FastCollinearPoints {
                 else nofSlopes = 1;
                 tmpSlope = point.slopeTo(pointsBySlope[i]);
             }
+            if ((nofSlopes >= 3) && (point.compareTo(pointsBySlope[N - nofSlopes]) < 0)) {
+                segmentList.add(new LineSegment(point, pointsBySlope[N - 1]));
+            }
         }
         segments = segmentList.toArray(new LineSegment[0]);
     }
