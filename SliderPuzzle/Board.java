@@ -5,13 +5,23 @@
  **************************************************************************** */
 
 public class Board {
+    private int[][] square;
+    private int n;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
-    public Board(int[][] tiles)
+    public Board(int[][] tiles) {
+        n = tiles.length;
+        this.square = new int[tiles.length][tiles[0].length];
+        for (int i = 0, n = tiles.length; i < n; i++) {
+            for (int j = 0; j < n; j++) this.square[i][j] = tiles[i][j];
+        }
+    }
 
     // string representation of this board
-    public String toString()
+    public String toString() {
+        
+    }
 
     // board dimension n
     public int dimension()
