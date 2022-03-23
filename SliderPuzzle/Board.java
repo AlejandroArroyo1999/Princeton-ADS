@@ -7,17 +7,26 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.ArrayList;
+
 public class Board {
     private int[][] square;
     private int n;
+    private int posx, posy;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
         this.n = tiles.length;
         this.square = new int[tiles.length][tiles[0].length];
-        for (int i = 0, n = tiles.length; i < n; i++) {
-            for (int j = 0; j < n; j++) this.square[i][j] = tiles[i][j];
+        for (int i = 0; i < this.n; i++) {
+            for (int j = 0; j < this.n; j++) {
+                this.square[i][j] = tiles[i][j];
+                if (tiles[i][j] == 0) {
+                    this.posx = i;
+                    this.posy = j;
+                }
+            }
         }
     }
 
@@ -91,14 +100,36 @@ public class Board {
         }
         return true;
     }
-    /*
-    // all neighboring boards
-    public Iterable<Board> neighbors()
 
+    // all neighboring boards
+    public Iterable<Board> neighbors() {
+        ArrayList<Board> result = new ArrayList<Board>();
+        // Fill in the array
+        Board tmp = this;
+        tmp.swap(tmp.posx, tmp.posy, tmp.posx - 1, tmp.posy);
+        result.add(tmp);
+        tmp = this;
+        tmp.swap(tmp.posx, tmp.posy, tmp.posx + 1, tmp.posy);
+        result.add(tmp);
+        tmp = this;
+        tmp.swap(tmp.posx, tmp.posy, tmp.posx, tmp.posy - 1);
+        result.add(tmp);
+        tmp = this;
+        tmp.swap(tmp.posx, tmp.posy, tmp.posx, tmp.posy + 1);
+        result.add(tmp);
+        return result;
+    }
+
+    /*
     // a board that is obtained by exchanging any pair of tiles
     public Board twin()
 
      */
+    private void swap(int ax, int ay, int bx, int by) {
+        int tmp = this.square[ax][ay];
+        this.square[ax][ay] = this.square[bx][by];
+        this.square[bx][by] = tmp;
+    }
 
     // unit testing (not graded)
     public static void main(String[] args) {
