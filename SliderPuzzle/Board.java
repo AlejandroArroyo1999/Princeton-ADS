@@ -70,11 +70,28 @@ public class Board {
     }
 
     // is this board the goal board?
-    public boolean isGoal()
-    /*
-    // does this board equal y?
-    public boolean equals(Object y)
+    public boolean isGoal() {
+        for (int i = 0; i < this.n; i++) {
+            for (int j = 0; j < this.n; j++) {
+                if (this.square[i][j] != ((i * this.n) + j)) return false;
+            }
+        }
+        return true;
+    }
 
+    // does this board equal y?
+    public boolean equals(Object y) {
+        if (y.getClass() != this.getClass()) return false;
+        Board x = (Board) y;
+        if (this.n != x.n) return false;
+        for (int i = 0; i < this.n; i++) {
+            for (int j = 0; j < this.n; j++) {
+                if (this.square[i][j] != x.square[i][j]) return false;
+            }
+        }
+        return true;
+    }
+    /*
     // all neighboring boards
     public Iterable<Board> neighbors()
 
