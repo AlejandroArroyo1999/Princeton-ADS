@@ -39,16 +39,39 @@ public class Board {
     public int dimension() {
         return this.n;
     }
-    /*
+
     // number of tiles out of place
-    public int hamming()
+    public int hamming() {
+        int outPlace = 0;
+        for (int i = 0; i < this.n; i++) {
+            for (int j = 0; j < this.n; j++) {
+                if (this.square[i][j] != ((i * this.n) + j)) outPlace++;
+            }
+        }
+        return outPlace;
+    }
 
     // sum of Manhattan distances between tiles and goal
-    public int manhattan()
+    public int manhattan() {
+        int distance = 0;
+        for (int i = 0; i < this.n; i++) {
+            for (int j = 0; j < this.n; j++) {
+                int pos = this.square[i][j];
+                if (pos != ((i * this.n) + j)) {
+                    while (pos > this.n) {
+                        pos -= this.n;
+                        distance++;
+                    }
+                    distance += pos;
+                }
+            }
+        }
+        return distance;
+    }
 
     // is this board the goal board?
     public boolean isGoal()
-
+    /*
     // does this board equal y?
     public boolean equals(Object y)
 
