@@ -106,17 +106,14 @@ public class Board {
         ArrayList<Board> result = new ArrayList<Board>();
         // Fill in the array
         Board tmp = this;
-        tmp.swap(tmp.posx, tmp.posy, tmp.posx - 1, tmp.posy);
-        result.add(tmp);
-        tmp = this;
-        tmp.swap(tmp.posx, tmp.posy, tmp.posx + 1, tmp.posy);
-        result.add(tmp);
-        tmp = this;
-        tmp.swap(tmp.posx, tmp.posy, tmp.posx, tmp.posy - 1);
-        result.add(tmp);
-        tmp = this;
-        tmp.swap(tmp.posx, tmp.posy, tmp.posx, tmp.posy + 1);
-        result.add(tmp);
+        if (tmp.swap(tmp.posx, tmp.posy, tmp.posx - 1, tmp.posy))
+            result.add(tmp);
+        if (tmp.swap(tmp.posx - 1, tmp.posy, tmp.posx + 1, tmp.posy))
+            result.add(tmp);
+        if (tmp.swap(tmp.posx + 1, tmp.posy, tmp.posx, tmp.posy - 1))
+            result.add(tmp);
+        if (tmp.swap(tmp.posx, tmp.posy - 1, tmp.posx, tmp.posy + 1))
+            result.add(tmp);
         return result;
     }
 
@@ -125,10 +122,14 @@ public class Board {
     public Board twin()
 
      */
-    private void swap(int ax, int ay, int bx, int by) {
+    private boolean swap(int ax, int ay, int bx, int by) {
+        if ((ax < 0) || (ay < 0) || (ax >= this.n) || (ay >= this.n) ||
+                (bx < 0) || (by < 0) || (bx >= this.n) || (by >= this.n))
+            return false;
         int tmp = this.square[ax][ay];
         this.square[ax][ay] = this.square[bx][by];
         this.square[bx][by] = tmp;
+        return true;
     }
 
     // unit testing (not graded)
