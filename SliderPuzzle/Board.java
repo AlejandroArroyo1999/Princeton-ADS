@@ -8,6 +8,7 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
     private int[][] square;
@@ -103,17 +104,28 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        ArrayList<Board> result = new ArrayList<Board>();
+        List<Board> result = new ArrayList<Board>();
         // Fill in the array
         Board tmp = this;
-        if (tmp.swap(tmp.posx, tmp.posy, tmp.posx - 1, tmp.posy))
+        int length = 0;
+        if (tmp.swap(tmp.posx, tmp.posy, tmp.posx - 1, tmp.posy)) {
             result.add(tmp);
-        if (tmp.swap(tmp.posx - 1, tmp.posy, tmp.posx + 1, tmp.posy))
+            length++;
+        }
+        if (tmp.swap(tmp.posx - 1, tmp.posy, tmp.posx + 1, tmp.posy)) {
             result.add(tmp);
-        if (tmp.swap(tmp.posx + 1, tmp.posy, tmp.posx, tmp.posy - 1))
+            length++;
+        }
+        if (tmp.swap(tmp.posx + 1, tmp.posy, tmp.posx, tmp.posy - 1)) {
             result.add(tmp);
-        if (tmp.swap(tmp.posx, tmp.posy - 1, tmp.posx, tmp.posy + 1))
+            length++;
+        }
+        if (tmp.swap(tmp.posx, tmp.posy - 1, tmp.posx, tmp.posy + 1)) {
             result.add(tmp);
+            length++;
+        }
+        Board[] r = new Board[length];
+        r = result.toArray(r);
         return result;
     }
 
