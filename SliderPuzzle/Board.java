@@ -6,9 +6,9 @@
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Board {
     private int[][] square;
@@ -104,44 +104,47 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        List<Board> result = new ArrayList<Board>();
+        ArrayList<Board> result = new ArrayList<Board>();
         // Fill in the array
-        Board tmp = this;
-        int length = 0;
-        if (tmp.swap(tmp.posx, tmp.posy, tmp.posx - 1, tmp.posy)) {
+        Board tmp = this.swap(this.posx, this.posy, this.posx - 1, this.posy);
+        if (tmp != null)
             result.add(tmp);
-            length++;
-        }
-        if (tmp.swap(tmp.posx - 1, tmp.posy, tmp.posx + 1, tmp.posy)) {
+        tmp = this.swap(this.posx, this.posy, this.posx + 1, this.posy);
+        if (tmp != null)
             result.add(tmp);
-            length++;
-        }
-        if (tmp.swap(tmp.posx + 1, tmp.posy, tmp.posx, tmp.posy - 1)) {
+        tmp = this.swap(this.posx, this.posy, this.posx, this.posy - 1);
+        if (tmp != null)
             result.add(tmp);
-            length++;
-        }
-        if (tmp.swap(tmp.posx, tmp.posy - 1, tmp.posx, tmp.posy + 1)) {
+        tmp = this.swap(this.posx, this.posy, this.posx, this.posy + 1);
+        if (tmp != null)
             result.add(tmp);
-            length++;
-        }
-        Board[] r = new Board[length];
-        r = result.toArray(r);
         return result;
     }
 
-    /*
-    // a board that is obtained by exchanging any pair of tiles
-    public Board twin()
 
-     */
-    private boolean swap(int ax, int ay, int bx, int by) {
+    // a board that is obtained by exchanging any pair of tiles
+    public Board twin() {
+        Board r = this;
+        int[] Origin = new int[] { StdRandom.uniform(0, 3), StdRandom.uniform(0, 3) };
+        int[] Final = new int[] { StdRandom.uniform(0, 3), StdRandom.uniform(0, 3) };
+        while (Origin == Final || Origin[0] == Origin[1] || Final[0] == Final[1]) {
+            Origin = new int[] { StdRandom.uniform(0, 3), StdRandom.uniform(0, 3) };
+            Final = new int[] { StdRandom.uniform(0, 3), StdRandom.uniform(0, 3) };
+        }
+
+        return r.swap(Origin[0], Origin[1], Final[0], Final[1]);
+    }
+
+
+    private Board swap(int ax, int ay, int bx, int by) {
         if ((ax < 0) || (ay < 0) || (ax >= this.n) || (ay >= this.n) ||
                 (bx < 0) || (by < 0) || (bx >= this.n) || (by >= this.n))
-            return false;
-        int tmp = this.square[ax][ay];
-        this.square[ax][ay] = this.square[bx][by];
-        this.square[bx][by] = tmp;
-        return true;
+            return null;
+        Board result = this;
+        int tmp = result.square[ax][ay];
+        result.square[ax][ay] = result.square[bx][by];
+        result.square[bx][by] = tmp;
+        return result;
     }
 
     // unit testing (not graded)
