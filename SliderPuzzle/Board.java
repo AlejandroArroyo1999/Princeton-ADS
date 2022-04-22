@@ -9,6 +9,7 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
     private int[][] square;
@@ -55,10 +56,10 @@ public class Board {
         int outPlace = 0;
         for (int i = 0; i < this.n; i++) {
             for (int j = 0; j < this.n; j++) {
-                if (this.square[i][j] != ((i * this.n) + j)) outPlace++;
+                if (this.square[i][j] != ((i * this.n) + j + 1)) outPlace++;
             }
         }
-        return outPlace;
+        return outPlace - 1;
     }
 
     // sum of Manhattan distances between tiles and goal
@@ -91,7 +92,8 @@ public class Board {
 
     // does this board equal y?
     public boolean equals(Object y) {
-        if (y.getClass() != this.getClass()) return false;
+        if (y == null) return false;
+        if (y.getClass() != Board.class) return false;
         Board x = (Board) y;
         if (this.n != x.n) return false;
         for (int i = 0; i < this.n; i++) {
@@ -104,18 +106,18 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        ArrayList<Board> result = new ArrayList<Board>();
+        List<Board> result = new ArrayList<Board>();
         // Fill in the array
-        Board tmp = this.swap(this.posx, this.posy, this.posx - 1, this.posy);
+        Board tmp = swap(posx, posy, posx - 1, posy);
         if (tmp != null)
             result.add(tmp);
-        tmp = this.swap(this.posx, this.posy, this.posx + 1, this.posy);
+        tmp = swap(posx, posy, posx + 1, posy);
         if (tmp != null)
             result.add(tmp);
-        tmp = this.swap(this.posx, this.posy, this.posx, this.posy - 1);
+        tmp = swap(posx, posy, posx, posy - 1);
         if (tmp != null)
             result.add(tmp);
-        tmp = this.swap(this.posx, this.posy, this.posx, this.posy + 1);
+        tmp = swap(posx, posy, posx, posy + 1);
         if (tmp != null)
             result.add(tmp);
         return result;
@@ -124,7 +126,6 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        Board r = this;
         int[] Origin = new int[] { StdRandom.uniform(0, 3), StdRandom.uniform(0, 3) };
         int[] Final = new int[] { StdRandom.uniform(0, 3), StdRandom.uniform(0, 3) };
         while (Origin == Final || Origin[0] == Origin[1] || Final[0] == Final[1]) {
@@ -132,19 +133,24 @@ public class Board {
             Final = new int[] { StdRandom.uniform(0, 3), StdRandom.uniform(0, 3) };
         }
 
-        return r.swap(Origin[0], Origin[1], Final[0], Final[1]);
+        return this.swap(Origin[0], Origin[1], Final[0], Final[1]);
     }
 
 
     private Board swap(int ax, int ay, int bx, int by) {
-        if ((ax < 0) || (ay < 0) || (ax >= this.n) || (ay >= this.n) ||
-                (bx < 0) || (by < 0) || (bx >= this.n) || (by >= this.n))
+        if ((ax < 0) || (ay < 0) || (ax >= n) || (ay >= n) ||
+                (bx < 0) || (by < 0) || (bx >= n) || (by >= n))
             return null;
-        Board result = this;
-        int tmp = result.square[ax][ay];
-        result.square[ax][ay] = result.square[bx][by];
-        result.square[bx][by] = tmp;
-        return result;
+        int[][] result = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result[i][j] = square[i][j];
+            }
+        }
+        int tmp = result[ax][ay];
+        result[ax][ay] = result[bx][by];
+        result[bx][by] = tmp;
+        return new Board(result);
     }
 
     // unit testing (not graded)
@@ -157,6 +163,10 @@ public class Board {
         }
         Board result = new Board(tiles);
         StdOut.println(result.toString());
+        for (Board i : result.neighbors()) {
+            StdOut.println(i.toString());
+            for (Board j : i.neighbors()) StdOut.println(j.toString());
+        }
     }
 
 }

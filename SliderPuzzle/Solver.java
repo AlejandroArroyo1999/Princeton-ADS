@@ -8,12 +8,12 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Solver {
     private LinkedList<Board> seqOrig = new LinkedList<Board>();
-    private LinkedList<Board> seqCopy = new LinkedList<Board>();
     private int moves = 0;
     private boolean solvable = false;
 
@@ -22,22 +22,23 @@ public class Solver {
         MinPQ<SearchNode> posibOrig = new MinPQ<SearchNode>();
         MinPQ<SearchNode> posibCopy = new MinPQ<SearchNode>();
 
-        posibOrig.insert(new SearchNode(initial, moves++, null));
-        posibCopy.insert(new SearchNode(initial.twin(), moves++, null));
+        moves++;
+        posibOrig.insert(new SearchNode(initial, moves, null));
+        posibCopy.insert(new SearchNode(initial.twin(), moves, null));
 
         SearchNode tmpOrig = posibOrig.delMin();
         SearchNode tmpCopy = posibCopy.delMin();
 
-        while (!(tmpOrig.End() && tmpCopy.End())) {
-            for (Board i : tmpOrig.NextPossibilities())
-                posibOrig.insert(new SearchNode(i, moves++, tmpOrig.current));
-            for (Board i : tmpCopy.NextPossibilities())
-                posibCopy.insert(new SearchNode(i, moves++, tmpCopy.current));
+        while (!(tmpOrig.end() && tmpCopy.end())) {
+            for (Board i : tmpOrig.nextPossibilities())
+                posibOrig.insert(new SearchNode(i, moves, tmpOrig.current));
+            for (Board i : tmpCopy.nextPossibilities())
+                posibCopy.insert(new SearchNode(i, moves, tmpCopy.current));
             seqOrig.add(tmpOrig.current);
-            seqCopy.add(tmpCopy.current);
             tmpOrig = posibOrig.delMin();
             tmpCopy = posibCopy.delMin();
-            solvable = tmpOrig.End();
+            solvable = tmpOrig.end();
+            moves++;
         }
     }
 
@@ -86,33 +87,34 @@ public class Solver {
         private Board current;
         private int nofMoves;
         private Board previous;
+        private int ham;
 
         public SearchNode(Board c, int n, Board p) {
             this.current = c;
             this.nofMoves = n;
             this.previous = p;
+            this.ham = c.hamming();
         }
 
-        public Board[] NextPossibilities() {
-            Iterable<Board> r = this.current.neighbors();
-            Board[] result = new Board[((List<Board>) r).size() - 1];
-            int f = 0;
+        public Iterable<Board> nextPossibilities() {
+            List<Board> r = (List<Board>) this.current.neighbors();
+            List<Board> result = new ArrayList<Board>();
             for (Board i : r) {
                 if (!i.equals(this.previous)) {
-                    break;
+                    result.add(i);
                 }
-                result[f++] = i;
             }
             return result;
         }
 
-        public boolean End() {
+        public boolean end() {
             return this.current.isGoal();
         }
 
         public int compareTo(SearchNode that) {
-            return Integer.compare(this.nofMoves + this.current.manhattan(),
-                                   that.nofMoves + that.current.manhattan());
+            if ((this.nofMoves + this.ham) > (that.nofMoves + that.ham)) return 1;
+            if ((this.nofMoves + this.ham) < (that.nofMoves + that.ham)) return -1;
+            return 0;
         }
     }
 
