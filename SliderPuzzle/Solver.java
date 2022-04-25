@@ -29,7 +29,7 @@ public class Solver {
         SearchNode tmpOrig = posibOrig.delMin();
         SearchNode tmpCopy = posibCopy.delMin();
 
-        while (!(tmpOrig.end() && tmpCopy.end())) {
+        while (!(tmpOrig.end() || tmpCopy.end())) {
             for (Board i : tmpOrig.nextPossibilities())
                 posibOrig.insert(new SearchNode(i, moves, tmpOrig.current));
             for (Board i : tmpCopy.nextPossibilities())
@@ -40,6 +40,7 @@ public class Solver {
             solvable = tmpOrig.end();
             moves++;
         }
+        seqOrig.add(tmpOrig.current);
     }
 
     // is the initial board solvable? (see below)
@@ -87,13 +88,11 @@ public class Solver {
         private Board current;
         private int nofMoves;
         private Board previous;
-        private int ham;
 
         public SearchNode(Board c, int n, Board p) {
             this.current = c;
             this.nofMoves = n;
             this.previous = p;
-            this.ham = c.hamming();
         }
 
         public Iterable<Board> nextPossibilities() {
@@ -112,9 +111,8 @@ public class Solver {
         }
 
         public int compareTo(SearchNode that) {
-            if ((this.nofMoves + this.ham) > (that.nofMoves + that.ham)) return 1;
-            if ((this.nofMoves + this.ham) < (that.nofMoves + that.ham)) return -1;
-            return 0;
+            int ham = current.hamming();
+            return Integer.compare(this.nofMoves + ham, that.nofMoves + ham);
         }
     }
 

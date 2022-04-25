@@ -84,7 +84,10 @@ public class Board {
     public boolean isGoal() {
         for (int i = 0; i < this.n; i++) {
             for (int j = 0; j < this.n; j++) {
-                if (this.square[i][j] != ((i * this.n) + j)) return false;
+                if (this.square[i][j] != 0) {
+                    if (this.square[i][j] != ((i * this.n) + j + 1))
+                        return false;
+                }
             }
         }
         return true;
